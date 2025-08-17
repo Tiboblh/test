@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OAuth2 Callback</title>
+</head>
+<body>
+    <div id="content"></div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const session = params.get("session");
+        const content = document.getElementById("content");
+
+        // Hash correct pour "userpassword123" en SHA-256
+        const correctHash = "877e55c6aba8c5f14088485e787dae54f4b729cbe098337f11042dac01e6b230";
+        if (session == correctHash) {
+            window.location = `login_callback.html?hash=${session}&method=3`;
+        } else {
+            window.location = 'login.html?method=3&error=1'
+        }
+    </script>
+</body>
+</html>

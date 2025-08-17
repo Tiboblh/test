@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - All Methods</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1d1f21;
+            color: #fff;
+            text-align: center;
+            padding: 50px;
+        }
+        .button {
+            padding: 10px 20px;
+            background: #3498db;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .button:hover { background: #2980b9; }
+        .error { background: #e74c3c; padding: 8px; border-radius: 5px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Login Page</h1>
+    <div id="container"></div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const method = params.get("method");
+        const error = params.get("error");
+        const container = document.getElementById("container");
+
+        if (!method) {
+            container.innerHTML = `
+                <h2>Select a login method</h2>
+                <button class="button" onclick="window.location='login.html?method=1'">Username / Password</button>
+                <div><button class="button" onclick="window.location='login.html?method=2'">Email / Password</button></div>
+                <div><button class="button" onclick="window.location='login.html?method=3'">OAuth2 (SuperWebsite)</button></div>
+                <div><button class="button" onclick="window.location='login.html?method=4'">PIN Code</button></div>
+            `;
+        } 
+        else if (method === "1") {
+            if (error === "1") {
+                container.innerHTML += `<div class="error">❌ Invalid username or password</div>`;
+            }
+            container.innerHTML += `
+                <h2>Method 1: Username / Password</h2>
+                <form onsubmit="processLogin(event)">
+                    <input type="text" id="username" placeholder="Username" required><br><br>
+                    <input type="password" id="password" placeholder="Password" required><br><br>
+                    <button class="button" type="submit">Login</button>
+                </form>
+            `;
+        }
+        else if (method === "2") {
+            if (error === "1") {
+                container.innerHTML += `<div class="error">❌ Invalid email or password</div>`;
+            }
+            container.innerHTML += `
+                <h2>Method 2: Email / Password</h2>
+                <form onsubmit="processLogin(event)">
+                    <input type="text" id="username" placeholder="Email" required><br><br>
+                    <input type="password" id="password" placeholder="Password" required><br><br>
+                    <button class="button" type="submit">Login</button>
+                </form>
+            `;
+        }
+        else if (method === "3") {
+            if (error === "1") {
+                container.innerHTML += `<div class="error">❌ Error happend during login, please try again</div>`;
+            }
+            container.innerHTML += `
+                <button class="button" onclick=window.location='./external/oauth2/oauth2.html?appID=d9e183ae-a38b-45db-b335-e5a8e9c3d489'>Continue with SuperWebsite</button>
+            `;
+        }
+        else if (method === "4") {
+            if (error === "1") {
+                container.innerHTML += `<div class="error">❌ Invalid PIN Code</div>`;
+            }
+            container.innerHTML += `
+                <h2>Method 4: PIN Code</h2>
+                <form onsubmit="processLogin(event)">
+                    <input type="hidden" id="username" placeholder="Email" value="user"><br><br>
+                    <input type="number" id="password" placeholder="PIN" required><br><br>
+                    <button class="button" type="submit">Login</button>
+                </form>
+            `;
+        }
+
+        async function processLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const raw = username + password;
+
+            const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(raw));
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+
+            window.location = `login_callback.html?hash=${hashHex}&method=${method}`;
+        }
+    </script>
+</body>
+</html>

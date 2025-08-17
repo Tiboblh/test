@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Callback</title>
+</head>
+<body>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const method = params.get("method");
+        const hash = params.get("hash");
+
+        // Hash correct pour "userpassword123" en SHA-256
+        const correctHash = {
+            1: "8006c7dc1a95265968ae978fd4226a8f1cfe3bea636517ea0b6709fcb12991cb",
+            2: "6000ef374c68b0c103739c630df7809e61830fb84b2cd90e3b1a926da0168798",
+            3: "877e55c6aba8c5f14088485e787dae54f4b729cbe098337f11042dac01e6b230",
+            4: "831c237928e6212bedaa4451a514ace3174562f6761f6a157a2fe5082b36e2fb",
+        };
+
+        if (correctHash[method] && hash === correctHash[method]) {
+            window.location = `index.html?success=1&method=${method}`;
+        } else {
+            window.location = `login.html?method=${method}&error=1`;
+        }
+    </script>
+</body>
+</html>

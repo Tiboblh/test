@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Login Methods</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1d1f21, #2d2f31);
+            color: #fff;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+        }
+        h2 {
+            font-weight: normal;
+            color: #ccc;
+        }
+        .button {
+            display: inline-block;
+            margin: 15px;
+            padding: 12px 25px;
+            font-size: 1em;
+            font-weight: bold;
+            color: #fff;
+            background: #3498db;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-decoration: none;
+        }
+        .button:hover {
+            background: #2980b9;
+        }
+        .success {
+            background: #2ecc71;
+            padding: 10px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        .error {
+            background: #e74c3c;
+            padding: 10px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to All Login Methods!</h1>
+    <h2>Press Login to start</h2>
+    <h2>Default creds are <b>user / password123</b>, pin/email: <b>1234 / user@email.com</b></h2>
+    <h2>For additional info/files click Directory</h2>
+
+    <!-- Success/Error messages -->
+    <div id="message"></div>
+
+    <!-- Buttons -->
+    <a href="login.html" class="button">Login</a>
+    <a href="dir.html" class="button">Directory</a>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const msgBox = document.getElementById('message');
+
+        if (params.get("success") === "1") {
+            msgBox.innerHTML = `<div class="success">✅ Login successful (method ${params.get("method")})`;
+        } else if (params.get("error") === "1") {
+            msgBox.innerHTML = `<div class="error">❌ Login failed (method ${params.get("method")})</div>`;
+        }
+    </script>
+</body>
+</html>
