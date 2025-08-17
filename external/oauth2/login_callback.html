@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Callback</title>
+</head>
+<body>
+    <div id="content"></div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const session = params.get("session");
+        const appID = params.get("appID");
+        const content = document.getElementById("content");
+
+        // Hash correct pour "userpassword123" en SHA-256
+        const correctHash = "877e55c6aba8c5f14088485e787dae54f4b729cbe098337f11042dac01e6b230";
+
+        if (appID == "d9e183ae-a38b-45db-b335-e5a8e9c3d489") {
+            if (session == correctHash) {
+                window.location = `../../oauth2callback.html?session=${session}`;
+            } else {
+                window.location = `login.html?appID=${appID}&error=1`;
+            }
+        } else {
+            content.innerHTML = "<h1>Invalid app ID</h1>"
+        }
+    </script>
+</body>
+</html>

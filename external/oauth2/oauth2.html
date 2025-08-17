@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperWebsite - OAuth2</title>
+</head>
+<body>
+    <div id="content"><div>
+</body>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const appID = params.get("appID");
+    const content = document.getElementById("content");
+
+    if (appID != "d9e183ae-a38b-45db-b335-e5a8e9c3d489") {
+        content.innerHTML = "<h1>Invalid app ID</h1>"
+    }
+    if (appID == "d9e183ae-a38b-45db-b335-e5a8e9c3d489") {
+        window.location = `login.html?appID=${appID}`;
+    }
+</script>
+</html>

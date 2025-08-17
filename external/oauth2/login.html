@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperWebsite - OAuth2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 320px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            text-align: left;
+            font-size: 14px;
+            color: #444;
+        }
+
+        input {
+            width: 93%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #357ab8;
+        }
+
+        .error {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background: #ffe5e5;
+            color: #d8000c;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="content"><div>
+</body>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const appID = params.get("appID");
+    const error = params.get("error");
+    const content = document.getElementById("content");
+
+    if (appID !== "d9e183ae-a38b-45db-b335-e5a8e9c3d489") {
+        content.innerHTML = "<h1>Invalid app ID</h1>";
+    } else {
+        // 8 espaces avant content.innerHTML :
+        content.innerHTML = `
+            <h1>Login</h1>
+            <form id="loginForm">
+                <label>Username:<br><input type="text" id="username" required></label>
+                <label>Password:<br><input type="password" id="password" required></label>
+                <button type="submit">Login</button>
+            </form>
+        `;
+
+        if (error == "1") {
+            content.innerHTML += `<div class="error">❌ Invalid email or password</div>`;
+        }
+
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Concat password + username
+            const combined = password + username;
+
+            // SHA-256 hash
+            const encoder = new TextEncoder();
+            const data = encoder.encode(combined);
+            const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+
+            // Redirect
+            window.location = `login_callback.html?appID=${appID}&session=${hashHex}`;
+        });
+    }
+</script>
+</html>
